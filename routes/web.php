@@ -19,7 +19,7 @@ Auth::routes();
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/', [ AdminDashboardController::class , 'home'])->name('home');
-    Route::resource('/posts', ProjectController::class);
+    Route::resource('/projects', ProjectController::class);
 });
 
 
