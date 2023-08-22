@@ -14,7 +14,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Project::paginate(15);
+        return view('admin.projects.index', compact('projects'));
     }
 
     /**
@@ -22,7 +23,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.projects.create');
     }
 
     /**
@@ -30,23 +31,31 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'title' => ['required', 'unique:projects','min:3', 'max:255'],
+            'content' => ['required', 'min:10'],
+        ]);
+
+        $data['slug'] = Str::of($data['title'])->slug('-');
+        $newProject = Project::create($data);
+
+        return redirect()->route('admin.posts.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Project $project)
     {
-        //
+        return view('admin.projects.show', compact('project'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit()
     {
-        //
+        
     }
 
     /**
