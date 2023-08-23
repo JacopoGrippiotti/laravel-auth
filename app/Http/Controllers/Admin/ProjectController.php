@@ -59,22 +59,53 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.posts.edit', compact('project'));
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Project $project)
     {
-        //
+        $data = $request->validate([
+            'title' => ['required', 'min:3', 'max:255', Rule::unique('projects')->ignore($project->id)],
+            'url' => ['url:https'],
+            'content' => ['required', 'min:10'],
+        ]);
+        $data['slug'] = Str::of("$project->id " . $data['title'])->slug('-');
+
+        $project->update($data);
+
+        return redirect()->route('admin.projects.show', compact('project'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return redirect()->route('admin.projects.index');
+    }
+
+    public function deletedIndex(){
+        $projects = Project::onlyTrashed()->paginate(10);
+
+        return view('admin.projects.deleted', compact('projects'));
+    }
+
+    public function restore($slug){
+        $project = Project::onlyTrashed()->findOrFail($slug);
+        $project->restore();
+
+        return redirect()->route('admin.projects.index');
+    }
+
+    public function obliterate($slug)
+    {
+        $project = Project::onlyTrashed()->findOrFail($slug);
+        $project->forceDelete();
+
+        return redirect()->route('admin.projects.index');
     }
 }
