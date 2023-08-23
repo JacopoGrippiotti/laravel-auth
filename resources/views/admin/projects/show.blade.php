@@ -6,7 +6,9 @@
         <div class="col-12">
             <div class="card">
                 <h5 class="card-header"> ID: {{ $project->id }} ---- {{ $project->slug }}</h5>
-                <img src="{{ $project->image }}" alt="{{ $project->title }}">
+                <a src="{{ $project->url }}" alt="{{ $project->title }}">
+                   Project url
+                </a>
                 <div class="card-body">
                     <h5 class="card-title">
                         {{ $project->title }}
@@ -17,9 +19,14 @@
                     <a href="{{ route('admin.projects.edit', $project->id) }}" class="btn btn-sm btn-success">
                         Edit
                     </a>
-                    <a href="" class="btn btn-sm btn-warning">
-                        Delete
-                    </a>
+                    <form class="d-inline-block" action="{{ route('admin.projects.destroy', $project ) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" class="btn btn-sm btn-warning">
+                            Delete
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
