@@ -7,7 +7,7 @@
             <div class="card">
                 <h5 class="card-header"> ID: {{ $project->id }} ---- {{ $project->slug }}</h5>
                 <a src="{{ $project->url }}" alt="{{ $project->title }}">
-                   Project url
+                   Project url: {{$project->url}}
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">
@@ -16,7 +16,7 @@
                     <p class="card-text">
                         {{ $project->content }}
                     </p>
-                    <a href="{{ route('admin.projects.edit', $project->id) }}" class="btn btn-sm btn-success">
+                    <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-sm btn-success">
                         Edit
                     </a>
                     <form class="d-inline-block" action="{{ route('admin.projects.destroy', $project ) }}" method="POST">
