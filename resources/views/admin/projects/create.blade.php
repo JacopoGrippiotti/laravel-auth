@@ -17,7 +17,15 @@
                     <input type="text" class="form-control" id="title" placeholder="Insert your project's title" name="title">
                 </div>
 
-
+                @error('url')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+                <div class="mb-5">
+                    <label for="url" class="form-label">
+                        Project url
+                    </label>
+                    <input type="text" class="form-control" id="url" placeholder="https://ginetto-va-in-campagna-col-cappello.jpg" name="url">
+                </div>
                 @error('content')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
