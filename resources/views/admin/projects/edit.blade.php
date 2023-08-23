@@ -4,7 +4,7 @@
 <div class="container" id="projects-container">
     <div class="row justify-content-center">
         <div class="col-12">
-            <form action="{{ route('admin.projects.update', $project->id) }}" method="POST">
+            <form action="{{ route('admin.projects.update', $project) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -15,7 +15,7 @@
                     <label for="exampleFormControlInput1" class="form-label">
                         Title
                     </label>
-                    <input type="text" class="form-control" id="title" placeholder="Insert your post's title" name="title" value="{{ old( 'title' , $project->title) }}">
+                    <input type="text" class="form-control" id="title" placeholder="Insert your project's title" name="title" value="{{ old( 'title' , $project->title) }}">
                 </div>
 
                 @error('url')
@@ -36,13 +36,13 @@
                         Content
                     </label>
                     <textarea class="form-control" id="content" rows="7" name="content">
-                        {{ old( 'content' , $post->content) }}
+                        {{ old( 'content' , $project->content) }}
                     </textarea>
                 </div>
 
                 <div class="mb-3">
                     <button type="submit" class="me-3">
-                        Update post
+                        Update project
                     </button>
                     <button type="reset">
                         Reset
