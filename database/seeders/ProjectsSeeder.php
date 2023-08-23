@@ -4,6 +4,7 @@ namespace Database\Seeders;
 use App\Models\Project;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
 class ProjectsSeeder extends Seeder
@@ -17,7 +18,10 @@ class ProjectsSeeder extends Seeder
             $newProject = new Project();
             $newProject->title = ucfirst($faker->unique()->words(7, true));
             $newProject->content = $faker->paragraphs(10, true);
-            $newProject->slug = $faker->slug();
+            $newProject->url = $faker->url();
+            $newProject->slug = Str::of($newProject->title)->slug('-');
+            $newProject->save();
+            $newProject->slug = Str::of("$newProject->id " . $newProject->title)->slug('-');
             $newProject->save();
         }
     }
