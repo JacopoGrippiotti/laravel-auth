@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -32,18 +33,26 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+
+        $url_path= Storage::put('uploads', $request['url']);
         $data = $request->validate([
             'title' => ['required', 'unique:projects','min:3', 'max:255'],
-            'url' => ['url:https'],
+            'url' => ['url:http'],
+            'image' => ['image'],
             'content' => ['required', 'min:10'],
         ]);
+        
+        if ($request->hasFile('image')){
+            $img_path = Storage::put('uploads/projects', $request['image']);
+            $data['image'] = $img_path;
+        }
 
         $data["slug"] = Str::of($data['title'])->slug('-');
         $newPost = Post::create($data);
         $newPost->slug = Str::of("$newPost->id " . $data['title'])->slug('-');
         $newPost->save();
 
-        return redirect()->route('admin.projects.index');
+        return redirect()->route('admin.projects.show', $newProject);
     }
 
     /**
@@ -69,9 +78,17 @@ class ProjectController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'min:3', 'max:255', Rule::unique('projects')->ignore($project->id)],
-            'url' => ['url:https'],
+            'url' => ['url:http'],
+            'image' => ['image', 'max:512'],
             'content' => ['required', 'min:10'],
         ]);
+
+        if ($request->hasFile('image')){
+            Storage::delete($project->image);
+            $img_path = Storage::put('uploads/projects', $request['image']);
+            $data['image'] = $img_path;
+        }
+
         $data['slug'] = Str::of("$project->id " . $data['title'])->slug('-');
 
         $project->update($data);
@@ -94,18 +111,19 @@ class ProjectController extends Controller
         return view('admin.projects.deleted', compact('projects'));
     }
 
-    public function restore($slug){
+    public function restore(string $slug){
         $project = Project::onlyTrashed()->findOrFail($slug);
         $project->restore();
 
-        return redirect()->route('admin.projects.index');
+        return redirect()->route('admin.projects.show', $project);
     }
 
-    public function obliterate($slug)
+    public function obliterate(string $slug)
     {
         $project = Project::onlyTrashed()->findOrFail($slug);
+        Storage::delete($project->image);
         $project->forceDelete();
-
+        
         return redirect()->route('admin.projects.index');
     }
 }
