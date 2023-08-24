@@ -19,6 +19,7 @@ class ProjectsSeeder extends Seeder
             $newProject->title = ucfirst($faker->unique()->words(7, true));
             $newProject->content = $faker->paragraphs(10, true);
             $newProject->url = $faker->url();
+            $newProject->image = $faker->imageUrl(480, 360, 'project', true, 'projects', true, 'png');
             $newProject->slug = Str::of($newProject->title)->slug('-');
             $newProject->save();
             $newProject->slug = Str::of("$newProject->id " . $newProject->title)->slug('-');
