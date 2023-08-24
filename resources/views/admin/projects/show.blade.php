@@ -9,6 +9,13 @@
                 <a src="{{ $project->url }}" alt="{{ $project->title }}">
                    Project url: {{$project->url}}
                 </a>
+                
+                @if (str_starts_with($project->image, 'http' ))
+                    <img src="{{ $project->image }}" alt="{{ $project->title }}">
+                @else
+                    <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}">
+                @endif
+                
                 <div class="card-body">
                     <h5 class="card-title">
                         {{ $project->title }}
