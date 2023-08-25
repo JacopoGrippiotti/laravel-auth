@@ -34,23 +34,23 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
 
-        $url_path= Storage::put('uploads', $request['url']);
-        $data = $request->validate([
-            'title' => ['required', 'unique:projects','min:3', 'max:255'],
-            'url' => ['url:http'],
-            'image' => ['image'],
-            'content' => ['required', 'min:10'],
-        ]);
-        
         if ($request->hasFile('image')){
             $img_path = Storage::put('uploads/projects', $request['image']);
             $data['image'] = $img_path;
         }
+        $data = $request->validate([
+            'title' => ['required', 'unique:projects','min:3', 'max:255'],
+            'url' => ['url:https'],
+            'image' => ['image'],
+            'content' => ['required', 'min:10'],
+        ]);
+        
+        
 
         $data["slug"] = Str::of($data['title'])->slug('-');
-        $newPost = Post::create($data);
-        $newPost->slug = Str::of("$newPost->id " . $data['title'])->slug('-');
-        $newPost->save();
+        $newProject = Project::create($data);
+        $newProject->slug = Str::of("$newProject->id " . $data['title'])->slug('-');
+        $newProject->save();
 
         return redirect()->route('admin.projects.show', $newProject);
     }
