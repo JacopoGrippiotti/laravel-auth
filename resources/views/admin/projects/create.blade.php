@@ -34,8 +34,9 @@
                     <label for="url" class="form-label">
                         Project url
                     </label>
-                    <input type="file" class="form-control" id="url" placeholder="Upload your link" name="url" >
+                    <input type="text" class="form-control" id="url" placeholder="Upload your link" name="url" >
                 </div>
+                
                 @error('content')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
