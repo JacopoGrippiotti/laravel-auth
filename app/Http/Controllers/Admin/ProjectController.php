@@ -34,10 +34,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
 
-        if ($request->hasFile('image')){
-            $img_path = Storage::put('uploads/projects', $request['image']);
-            $data['image'] = $img_path;
-        }
+        
         $data = $request->validate([
             'title' => ['required', 'unique:projects','min:3', 'max:255'],
             'url' => ['url:https'],
@@ -46,6 +43,10 @@ class ProjectController extends Controller
         ]);
         
         
+        if ($request->hasFile('image')){
+            $img_path = Storage::put('uploads', $request['image']);
+            $data['image'] = $img_path;
+        }
 
         $data["slug"] = Str::of($data['title'])->slug('-');
         $newProject = Project::create($data);
@@ -85,7 +86,7 @@ class ProjectController extends Controller
 
         if ($request->hasFile('image')){
             Storage::delete($project->image);
-            $img_path = Storage::put('uploads/projects', $request['image']);
+            $img_path = Storage::put('uploads', $request['image']);
             $data['image'] = $img_path;
         }
 
